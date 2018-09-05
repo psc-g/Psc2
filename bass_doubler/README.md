@@ -2,6 +2,40 @@
 This code allows you to control a "virtual" bass from a MIDI controller (i.e. a
 keyboard).
 
+I have only tested this on my setup (Linux), so no guarantees that it will work
+anywhere else! Would be interested if it _does_ work for others in different
+setups :).
+
+## Install instructions
+1.  Install [SuperCollider](https://supercollider.github.io/)
+
+2.  Create a virtualenv and activate it. We need Python2 (and _not_ Python3)
+    because `pyosc` is not compatible with Python3. This step is optional but
+    recommended:
+
+    ```
+    virtualenv --system-site-packages -p python2 venv
+    source venv/bin/activate
+    ```
+
+3.  `pip install pyosc`.
+
+4.  Clone this repo.
+
+5.  Open SuperCollider, open `sc_server.scd` and run each group (enclosed in
+    parentheses) in order).
+
+6.  Start the python server: 
+
+    ```
+    python py_server.py
+    ```
+
+7.  Make music!
+
+
+## Hardware setup
+
 My personal setup (and how I use this code) is: 
 
 Roland keyboard ------ regular 1/4" -----> keyboard amplifier
