@@ -1,6 +1,10 @@
 # Bass doubler
 This code allows you to control a "virtual" bass from a MIDI controller (i.e. a
-keyboard).
+keyboard). It consists of two main files:
+*  *[`sc_server.scd`](./sc_server.scd):* SuperCollider server to transmit
+   events from the external MIDI controller to/from the Python server.
+*  *[`py_server.py`](./py_server.py):* Python server in charge of most of the
+   logic.
 
 I have only tested this on my setup (Linux), so no guarantees that it will work
 anywhere else! Would be interested if it _does_ work for others in different
