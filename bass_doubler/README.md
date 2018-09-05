@@ -38,6 +38,7 @@ setups :).
 
 My personal setup (and how I use this code) is: 
 
+```
 Roland keyboard ------ regular 1/4" -----> keyboard amplifier
               |
             MIDI
@@ -49,6 +50,7 @@ Roland keyboard ------ regular 1/4" -----> keyboard amplifier
               |
               v
       Roland GAIA ---- regular 1/4" -----> bass amplifier
+```
 
 I'm using a bass sound on the Roland GAIA.
 
