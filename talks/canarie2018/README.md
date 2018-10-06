@@ -1,5 +1,7 @@
 # Setup for talk at Canarie2018
-This is the setup I used for my recent talk in Canarie 2018, in Ottawa, Canada.
+This is the setup I used for my recent talk in
+[Canarie 2018](https://www.canarie.ca/canarie-national-summit/),
+in Ottawa, Canada.
 
 I was using an iRig 25 key keyboard that only has a volume knob which I used to
 control the improv mode (see `server.py` for details).
