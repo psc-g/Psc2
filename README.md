@@ -1,37 +1,9 @@
-## Welcome to GitHub Pages
+# Psc2
 
-You can use the [editor on GitHub](https://github.com/psc-g/Psc2/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Psc2 combines the worlds of jazz, rock, classical music, and artificial intelligence via original compositions and arrangements.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+the compositions are built around the interplay of jazz harmonies, complex rhythms and extensive improvisation; many of them are composed in the "long-form" compositional style of classical music.
 
-### Markdown
+the arrangements take well-known songs from pop, rock and jazz and re-build them in a manner similar to our original compositions. the arrangements include songs by michael jackson, guns n' roses, silvio rodriguez, duke ellington and others.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/psc-g/Psc2/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+psc is a señor swesearcher in google brain, and is experimenting with using machine learning models (including generative models for music) as part of the live performance. most of the code used will be available in this repo.
