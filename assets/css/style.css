@@ -91,6 +91,20 @@ main header {
 	border: 0;
 }
 
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border:2px solid #ffffff;
+}
+
+th {
+    border:2px solid #ffffff;
+}
+
+td {
+    border:1px solid #ffffff;
+}
+
 .handskeys {
   float: left;
   margin-left: 0%;

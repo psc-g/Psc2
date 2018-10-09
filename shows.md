@@ -3,7 +3,8 @@ layout: default
 ---
 # upcoming shows:
 
-| date | venue | city |
+| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **date** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **venue** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **city** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |
+| :------: | --------- | -------- |
 | nov 4, 2018 (sun) | [brookstreet hotel][brookstreet] (psc solo) | ottawa, on |
 | nov 23, 2018 (fri) | [brookstreet hotel][brookstreet] | ottawa, on |
 | dec 13, 2018 (thu) | [cafe resonance][resonance] | montreal, qc |
@@ -11,7 +12,8 @@ layout: default
 
 # past shows:
 
-| date | venue | city |
+| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **date** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **venue** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **city** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |
+| -------- | --------- | -------- |
 | sep 9, 2018 (sun) | [brookstreet hotel][brookstreet] | ottawa, on |
 | jun 30, 2018 (sat) | [brookstreet hotel][brookstreet] | ottawa, on |
 | jun 20, 2018 (wed) | [cafe resonance][resonance] | montreal, qc |
