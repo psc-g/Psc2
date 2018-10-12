@@ -25,6 +25,12 @@ layout: default
 | mar 19, 2018 (mon) | [brookstreet hotel][brookstreet] (psc solo) | ottawa, on |
 | mar 17, 2018 (sat) | [cafe resonance][resonance] (psc solo) | montreal, on |
 
+# technical talks (relating to this technology)
+
+| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **date** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **venue** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **city** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |
+| -------- | --------- | -------- |
+| oct 2, 2018 (tue) | [canarie national summit](https://canarie.ca/canarie-national-summit/) | ottawa, on |
+
 [brookstreet]: https://www.brookstreethotel.com/
 [resonance]: http://www.resonancecafe.com/
 [gigspace]: https://www.gigspace.ca/
