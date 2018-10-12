@@ -2,16 +2,20 @@
 layout: default
 ---
 Here are some of the charts of our original compositions and arrangements.
-*  [15_step](./15_step.pdf)
-*  [billie_jean](./billie_jean.pdf)
-*  [brave_new_world](./brave_new_world.pdf)
-*  [caravan](./caravan.pdf)
-*  [claudius_irae](./claudius_irae.pdf)
-*  [espalda_de_vidrio](./espalda_de_vidrio.pdf)
-*  [gang_des_loups](./gang_des_loups.pdf)
-*  [la_maza](./la_maza.pdf)
-*  [mancuspias](./mancuspias.pdf)
-*  [soul_and_body](./soul_and_body.pdf)
-*  [sufrir_exit](./sufrir_exit.pdf)
-*  [sweet_child_of_mine](./sweet_child_of_mine.pdf)
-*  [woland](./woland.pdf)
+# Originals
+*  [solipair](./charts/solipair.pdf)
+*  [brave new world](./charts/brave_new_world.pdf)
+*  [claudius irae](./charts/claudius_irae.pdf)
+*  [espalda de vidrio](./charts/espalda_de_vidrio.pdf)
+*  [gang des loups](./charts/gang_des_loups.pdf)
+*  [mancuspias](./charts/mancuspias.pdf)
+*  [woland](./charts/woland.pdf)
+
+# Arrangements
+*  [15 step](./charts/15_step.pdf)
+*  [billie jean](./charts/billie_jean.pdf)
+*  [caravan](./charts/caravan.pdf)
+*  [la maza](./charts/la_maza.pdf)
+*  [soul and body](./charts/soul_and_body.pdf)
+*  [que nadie sepa mi sufrir / exit music for a film](./charts/sufrir_exit.pdf)
+*  [sweet child of mine](./charts/sweet_child_of_mine.pdf)
