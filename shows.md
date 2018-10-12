@@ -8,7 +8,7 @@ layout: default
 | nov 4, 2018 (sun) | [brookstreet hotel][brookstreet] (psc solo) | ottawa, on |
 | nov 23, 2018 (fri) | [brookstreet hotel][brookstreet] | ottawa, on |
 | dec 13, 2018 (thu) | [cafe resonance][resonance] | montreal, qc |
-| jan 23, 2019 (sat) | [gigspace][gigspace] | ottawa, on |
+| jan 12, 2019 (sat) | [gigspace][gigspace] | ottawa, on |
 
 # past shows:
 
