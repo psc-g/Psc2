@@ -4,4 +4,7 @@ The code is [here](https://github.com/psc-g/Psc2/tree/master/research/nips2018/s
 
 The paper is [here](https://github.com/psc-g/Psc2/blob/master/research/nips2018/paper/improv.pdf).
 
-You can see a demo video of this [here](https://youtu.be/G5ID352gkas).
+You can see demo videos of this 
+
+*  [here](https://youtu.be/Pd46_EIlfy4)
+*  [and here](https://youtu.be/G5ID352gkas)

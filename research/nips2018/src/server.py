@@ -114,45 +114,6 @@ DRUM_MAPPING = {
 }
 
 
-def generate_melody():
-  """Generate a new melody by querying the model."""
-  global melody_bundle
-  global accumulated_primer_melody
-  global generated_melody
-  global max_robot_length
-  melody_config_id = melody_bundle.generator_details.id
-  melody_config = melody_rnn_model.default_configs[melody_config_id]
-  generator = melody_rnn_sequence_generator.MelodyRnnSequenceGenerator(
-      model=melody_rnn_model.MelodyRnnModel(melody_config),
-      details=melody_config.details,
-      steps_per_quarter=melody_config.steps_per_quarter,
-      checkpoint=melody_rnn_generate.get_checkpoint(),
-      bundle=melody_bundle)
-  generator_options = generator_pb2.GeneratorOptions()
-  generator_options.args['temperature'].float_value = 1.0
-  generator_options.args['beam_size'].int_value = 1
-  generator_options.args['branch_factor'].int_value = 1
-  generator_options.args['steps_per_iteration'].int_value = 1
-  primer_melody = magenta.music.Melody(accumulated_primer_melody)
-  qpm = magenta.music.DEFAULT_QUARTERS_PER_MINUTE
-  primer_sequence = primer_melody.to_sequence(qpm=qpm)
-  seconds_per_step = 60.0 / qpm / generator.steps_per_quarter
-  # Set the start time to begin on the next step after the last note ends.
-  last_end_time = (max(n.end_time for n in primer_sequence.notes)
-                   if primer_sequence.notes else 0)
-  melody_total_seconds = last_end_time * 3
-  generate_section = generator_options.generate_sections.add(
-      start_time=last_end_time + seconds_per_step,
-      end_time=melody_total_seconds)
-  generated_sequence = generator.generate(primer_sequence, generator_options)
-  generated_melody = [n.pitch for n in generated_sequence.notes]
-  # Get rid of primer melody.
-  generated_melody = generated_melody[len(accumulated_primer_melody):]
-  # Make sure generated melody is not too long.
-  generated_melody = generated_melody[:max_robot_length]
-  accumulated_primer_melody = []
-
-
 def set_click():
   global num_bars
   global num_steps
@@ -231,6 +192,45 @@ def looper():
       time.sleep(tts)
 
 
+def generate_melody():
+  """Generate a new melody by querying the model."""
+  global melody_bundle
+  global accumulated_primer_melody
+  global generated_melody
+  global max_robot_length
+  global qpm
+  melody_config_id = melody_bundle.generator_details.id
+  melody_config = melody_rnn_model.default_configs[melody_config_id]
+  generator = melody_rnn_sequence_generator.MelodyRnnSequenceGenerator(
+      model=melody_rnn_model.MelodyRnnModel(melody_config),
+      details=melody_config.details,
+      steps_per_quarter=melody_config.steps_per_quarter,
+      checkpoint=melody_rnn_generate.get_checkpoint(),
+      bundle=melody_bundle)
+  generator_options = generator_pb2.GeneratorOptions()
+  generator_options.args['temperature'].float_value = 1.0
+  generator_options.args['beam_size'].int_value = 1
+  generator_options.args['branch_factor'].int_value = 1
+  generator_options.args['steps_per_iteration'].int_value = 1
+  primer_melody = magenta.music.Melody(accumulated_primer_melody)
+  primer_sequence = primer_melody.to_sequence(qpm=qpm)
+  seconds_per_step = 60.0 / qpm / generator.steps_per_quarter
+  # Set the start time to begin on the next step after the last note ends.
+  last_end_time = (max(n.end_time for n in primer_sequence.notes)
+                   if primer_sequence.notes else 0)
+  melody_total_seconds = last_end_time * 3
+  generate_section = generator_options.generate_sections.add(
+      start_time=last_end_time + seconds_per_step,
+      end_time=melody_total_seconds)
+  generated_sequence = generator.generate(primer_sequence, generator_options)
+  generated_melody = [n.pitch for n in generated_sequence.notes]
+  # Get rid of primer melody.
+  generated_melody = generated_melody[len(accumulated_primer_melody):]
+  # Make sure generated melody is not too long.
+  generated_melody = generated_melody[:max_robot_length]
+  accumulated_primer_melody = []
+
+
 
 
 def generate_drums():
@@ -263,13 +263,15 @@ def generate_drums():
   else:
     primer_sequence = seed_drum_sequence
     local_num_steps = num_steps * 2
-  seconds_per_step = 60.0 / qpm / 4.0
-  total_seconds = local_num_steps * seconds_per_step
+    tempo = primer_sequence.tempos.add()
+    tempo.qpm = qpm
+  step_length = 60. / qpm / 4.0
+  total_seconds = local_num_steps * step_length
   # Set the start time to begin on the next step after the last note ends.
   last_end_time = (max(n.end_time for n in primer_sequence.notes)
                    if primer_sequence.notes else 0)
   generator_options.generate_sections.add(
-      start_time=last_end_time + seconds_per_step,
+      start_time=last_end_time + step_length,
       end_time=total_seconds)
   generated_sequence = generator.generate(primer_sequence, generator_options)
   generated_sequence = sequences_lib.quantize_note_sequence(generated_sequence, 4)
@@ -356,7 +358,7 @@ def process_note_on(addr, tags, args, source):
     if (last_first_beat_for_record is None or
         last_first_beat == last_first_beat_for_record):
       curr_time = time.time()
-      steps_per_second = int(qpm * 4 / 60)
+      steps_per_second = -(-qpm * 4. / 60.)  # This yields ceiling.
       curr_time_step = sequences_lib.quantize_to_step(
           curr_time - last_first_beat, steps_per_second)
       playable_notes.add(PlayableNote(type='bass',
@@ -373,7 +375,7 @@ def process_note_on(addr, tags, args, source):
     if (last_first_beat_for_record is None or
         last_first_beat == last_first_beat_for_record):
       curr_time = time.time()
-      steps_per_second = int(qpm * 4 / 60)
+      steps_per_second = -(-qpm * 4. / 60.)  # This yields ceiling.
       curr_time_step = sequences_lib.quantize_to_step(
           curr_time - last_first_beat, steps_per_second)
       playable_notes.add(PlayableNote(type='chords',
@@ -493,7 +495,7 @@ def cc_event(addr, tags, args, source):
         playable_instruments.remove('click')
       else:
         playable_instruments.add('click')
-    elif channel_name == 'track1_solo':
+    elif channel_name == 'track1_solo' and cc_num == highest_value:
       if last_tap_onset is None:
         last_tap_onset = time.time()
         return
@@ -507,8 +509,7 @@ def cc_event(addr, tags, args, source):
       else:
         beat_length += time_delta
         beat_length /= 2
-      beat_duration = time_signature.denominator / 2
-      qpm = 60.0 / beat_length / beat_duration
+      qpm = 60.0 / beat_length
     elif channel_name == 'track1_knob':
       qpm = 300 * cc_num / float(highest_value)
     elif channel_name == 'track_left' and cc_num == highest_value:
