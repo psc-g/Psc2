@@ -314,5 +314,9 @@ MIDIIn.connectAll;
 	b.sendMsg("/ccevent", num, chan, src, args);
 });
 
+~program = MIDIFunc.program({ |num, chan, src, args|
+	b.sendMsg("/programevent", num, chan, src, args);
+});
+
 q = { ~noteon.free; ~noteoff.free; };
 )
