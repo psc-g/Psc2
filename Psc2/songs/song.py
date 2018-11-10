@@ -7,3 +7,7 @@ class Song(object):
   @abc.abstractmethod
   def process_note(self, pitch, velocity, time):
     pass
+
+  @abc.abstractmethod
+  def process_program(self, program):
+    pass

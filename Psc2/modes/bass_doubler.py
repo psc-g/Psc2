@@ -58,7 +58,7 @@ class BassDoubler(mode.Mode):
     self.concurrent_notes = []
     self.bass_key_pressed = True
     msg = OSC.OSCMessage()
-    msg.setAddress('/playbass')
+    msg.setAddress('/playthru')
     msg.append(self.bass_note_playing)
     self.client.send(msg)
 
@@ -75,6 +75,9 @@ class BassDoubler(mode.Mode):
     Args:
       note: int, pitch to check.
       velocity: int, possibly used for playback.
+
+    Returns:
+      False, no pattern to match.
     """
     if self.highest_bass_note is not None and note > self.highest_bass_note:
       return
@@ -90,6 +93,7 @@ class BassDoubler(mode.Mode):
       self._send_stopnote()
     self.concurrent_notes.append([note, velocity])
     self._send_playnote()
+    return False
 
   def play(self, eigth_duration, velocity, client):
     pass

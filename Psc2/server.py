@@ -23,6 +23,7 @@ client.connect(send_address)
 
 current_song = 'solipair'
 songs = {'solipair': solipair.Solipair(client) }
+local_mode = False  # If true will ask SuperCollider for soundz.
 
 
 def print_status():
@@ -41,12 +42,14 @@ def process_note_on(addr, tags, args, source):
     args: Arguments passed in message.
     source: Source of sender.
   """
+  global local_mode
   global songs
   songs[current_song].process_note(args[0], args[1], 0)
-  msg = OSC.OSCMessage()
-  msg.setAddress('/playwurly')
-  msg.append(args)
-  client.send(msg)
+  if local_mode:
+    msg = OSC.OSCMessage()
+    msg.setAddress('/playwurly')
+    msg.append(args)
+    client.send(msg)
 
 
 def process_note_off(addr, tags, args, source):
@@ -67,7 +70,7 @@ def process_note_off(addr, tags, args, source):
     source: Source of sender.
   """
   msg = OSC.OSCMessage()
-  msg.setAddress('/stopnote')
+  msg.setAddress('/stopthru')
   msg.append(args)
   client.send(msg)
 
@@ -92,18 +95,15 @@ def cc_event(addr, tags, args, source):
     args: Arguments passed in message.
     source: Source of sender.
   """
-  global songs
-  if not args:
-    return
-  cc_num, cc_chan, cc_src, cc_args = args
-  if cc_num == 127:
-    songs['solipair'].play()
-  elif cc_num == 0:
-    songs['solipair'].stop()
+  # cc_num, cc_chan, cc_src, cc_args = args
+  pass
 
 
 def program_event(addr, tags, args, source):
-  cc_num, cc_chan, cc_src, cc_args = args
+  """Events sent by the Mongoose foot controller."""
+  global songs
+  cc_num, _, _, _ = args
+  songs['solipair'].process_program(cc_num)
 
 
 def main(_):

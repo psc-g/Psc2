@@ -105,3 +105,19 @@ venv.bak/
 
 # Jekyll
 _site/
+
+# Media files
+.mp4
+.aiff
+.mlt
+.wav
+
+# Tex files.
+Makefile
+.aux
+.bbl
+.bib
+.blg
+.out
+.tex
+.sty

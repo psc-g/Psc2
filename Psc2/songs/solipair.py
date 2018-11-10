@@ -1,13 +1,11 @@
 """Solipair song logic."""
 
-import threading
-
 from Psc2.songs import song
 from Psc2.modes import bass_doubler
 from Psc2.modes import looper
 
 class Solipair(song.Song):
-  """This defines the logic for playing Solipair.
+  """This defines the logic for Solipair.
 
   For most of the song it is in bass-doubling mode, except for the solo section
   where the bass is automated.
@@ -20,44 +18,51 @@ class Solipair(song.Song):
     Args:
       client: OSCClient, used to send messages for playback.
     """
-    self.client = client
-    self.playing = False
     self.eighth_note_duration = 0.5
     self.avg_velocity = 60
-    self.parts = {
-        'A': looper.Looper([(75, 1, 1), (70, 1, 1), (75, 1, 1), (82, 1, 1),
-                        (83, 1, 1), (79, 1, 1), (80, 1, 1), (76, 1, 1),
-                        (82, 1, 1), (83, 1, 1), (79, 1, 1), (80, 1, 1),
-                        (75, 3, 2), (79, 2, 0.8), (74, 2, 2), (79, 1, 1),
-                        (83, 3, 3), (74, 1, 1), (71, 1, 1), (74, 1, 1)]),
-        'doubler': bass_doubler.BassDoubler(self.client),
-        # 'Ap': looper.Looper([(75, 1, 1), (70, 1, 1), (75, 1, 1), (82, 1, 1),
-        #                  (83, 1, 1), (79, 1, 1), (80, 1, 1), (76, 1, 1),
-        #                  (82, 1, 1), (83, 1, 1), (79, 1, 1), (80, 1, 1),
-        #                  (75, 3, 2)]),
-        # 'B1': looper.Looper([(79, 2, 0.8), (74, 2, 2), (79, 1, 1),
-        #                  (83, 3, 3), (83, 2, 2), (83, 3, 3), (83, 3, 3),
-        #                  (78, 16, 16)]),
+    self.modes = {
+        'doubler': bass_doubler.BassDoubler(client, highest_bass_note=51),
+        'solo': looper.Looper(client,
+                              [(78, 1, 1), (69, 1, 1), (73, 1, 1), 
+                               (78, 1, 1), (78, 1, 1), (69, 1, 1), 
+                               (73, 1, 1), (77, 2, 2), (69, 1, 1), 
+                               (73, 1, 1), (77, 1, 1), (77, 1, 1), 
+                               (69, 1, 1), (73, 1, 1), (77, 1, 1), 
+                               (76, 1, 1), (69, 1, 1), (73, 1, 1), 
+                               (76, 1, 1), (76, 1, 1), (69, 1, 1), 
+                               (73, 1, 1), (75, 2, 2), (69, 1, 1), 
+                               (73, 1, 1), (75, 1, 1), (75, 1, 1), 
+                               (69, 1, 1), (73, 1, 1), (75, 1, 1)],
+                              repetitions=2,
+                              playback_notes=[
+                                (50, 4, 4), (50, 4, 4),
+                                (49, 4, 4), (49, 4, 4),
+                                (54, 4, 4), (54, 4, 4),
+                                (51, 4, 4), (51, 4, 4)],
+                              max_consec_mistakes=5),
     }
-    self.current_mode = 'doubler'
+    self.current_mode = 'non solo'
+    self.modes_to_process = ['doubler']  # Add 'solo' to auto-detect solo sect.
+    self.mode_detected = None
 
   def process_note(self, pitch, velocity, time):
-    self.parts[self.current_mode].process_note(pitch, velocity)
-    # if self.parts['A'].process_note(pitch, velocity):
-    #   self.eigth_note_duration, self.avg_velocity = self.parts['A'].get_avgs()
+    if self.current_mode == 'solo' and not self.modes['solo'].playing:
+      self.current_mode = 'non solo'
+      self.modes_to_process = ['doubler']
+    for mode in self.modes_to_process:
+      if self.modes[mode].process_note(pitch, velocity):
+        if mode == 'solo':
+          self.modes_to_process = []
+          self.current_mode = 'solo'
 
-  def play(self):
-    """Play the song structure.
-    """
-    self.playing = True
-    def play_song_structure():
-      while True:
-        if not self.playing:
-          break
-        self.parts['A'].play(self.eigth_note_duration, self.avg_velocity,
-                             self.client)
-    play_thread = threading.Thread(target = play_song_structure)
-    play_thread.start()
-
-  def stop(self):
-    self.playing = False
+  def process_program(self, program):
+    """Process program hits (footpedal)."""
+    # If in 'solo' mode, any hit of the pedal will return to bass doubler mode.
+    if self.current_mode == 'solo':
+      self.modes['solo'].stop()
+    elif program == 0:  # Tap to set tempo.
+      self.modes['solo'].set_tempo()
+    else:  # Start bass for solo.
+      self.modes_to_process = []
+      self.current_mode = 'solo'
+      self.modes['solo'].start_looper_thread()
