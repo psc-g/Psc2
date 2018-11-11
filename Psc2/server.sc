@@ -10,6 +10,7 @@ b = NetAddr.new("127.0.0.1", 12345);
 ~notes = Array.newClear(128);
 ~chordsnotes = Array.newClear(128);
 ~bassnotes = Array.newClear(128);
+~sendMidiIn = 1;  // Whether to send MIDI in to Python server.
 
 // Synth definitions.
 SynthDef(\bass, { arg freq = 220, amp = 0.8, att = 0.01, rel = 0.5, lofreq = 1000, hifreq = 3000;
@@ -88,6 +89,10 @@ SynthDef(\wurly, {
 	m.noteOff(16, msg[1], msg[2]);
 }, '/stopthru' );
 
+~togglethru = OSCFunc( { | msg, time, addr, port |
+	~sendMidiIn = 1 - ~sendMidiIn;
+}, '/togglethru' );
+
 ~bass = OSCFunc( { | msg, time, addr, port |
 	~bassnotes[msg[1]] = Synth(\bass, [\freq, msg[1].midicps, \amp, msg[2] * 0.00315]);
 }, '/playbass' );
@@ -128,15 +133,23 @@ SynthDef(\wurly, {
 MIDIIn.connectAll;
 
 ~noteon = MIDIFunc.noteOn({ |veloc, num, chan, src|
-	b.sendMsg("/processnoteon", num, veloc);
+  if(~sendMidiIn > 0) {
+    b.sendMsg("/processnoteon", num, veloc);
+  }
 });
 
 ~noteoff = MIDIFunc.noteOff({ |veloc, num, chan, src|
-	b.sendMsg("/processnoteoff", num, veloc);
+  if(~sendMidiIn > 0) {
+    b.sendMsg("/processnoteoff", num, veloc);
+  }
 });
 
 ~cc = MIDIFunc.cc({ |num, chan, src, args|
 	b.sendMsg("/ccevent", num, chan, src, args);
+});
+
+~bend = MIDIFunc.bend({ |num, chan, src, args|
+  b.sendMsg("/changesong", num);
 });
 
 ~program = MIDIFunc.program({ |num, chan, src, args|

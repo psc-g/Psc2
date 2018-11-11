@@ -10,6 +10,7 @@ import OSC
 import threading
 import time
 
+from Psc2.songs import espalda
 from Psc2.songs import solipair
 
 
@@ -22,7 +23,10 @@ client = OSC.OSCClient()  # To send to SuperCollier.
 client.connect(send_address)
 
 current_song = 'solipair'
-songs = {'solipair': solipair.Solipair(client) }
+songs = {
+    'solipair': solipair.Solipair(client),
+    'espalda': espalda.Espalda(client),
+}
 local_mode = False  # If true will ask SuperCollider for soundz.
 
 
@@ -99,11 +103,38 @@ def cc_event(addr, tags, args, source):
   pass
 
 
+def change_song(addr, tags, args, source):
+  """Handler for `/changesong` messages from SuperCollider.
+
+  Prints a prompt to change song being played.
+
+  Args:
+    addr: Address message sent to.
+    tags: Tags in message.
+    args: Arguments passed in message.
+    source: Source of sender.
+  """
+  global current_song
+  global songs
+  if args[0] == 0:
+    print('current song: {}'.format(current_song))
+    while True:
+      print('choose new song:')
+      for song in songs.keys():
+        print('\t{}'.format(song))
+      new_song = raw_input('new song: ')
+      if new_song in songs.keys():
+        current_song = new_song
+        break
+      print('invalid song, try again...')
+
+
 def program_event(addr, tags, args, source):
   """Events sent by the Mongoose foot controller."""
+  global current_song
   global songs
   cc_num, _, _, _ = args
-  songs['solipair'].process_program(cc_num)
+  songs[current_song].process_program(cc_num)
 
 
 def main(_):
@@ -117,6 +148,7 @@ def main(_):
   server.addMsgHandler('/processnoteoff', process_note_off)
   server.addMsgHandler('/ccevent', cc_event)
   server.addMsgHandler('/programevent', program_event)
+  server.addMsgHandler('/changesong', change_song)
 
 
 if __name__ == '__main__':

@@ -23,23 +23,10 @@ class Solipair(song.Song):
     self.modes = {
         'doubler': bass_doubler.BassDoubler(client, highest_bass_note=51),
         'solo': looper.Looper(client,
-                              [(78, 1, 1), (69, 1, 1), (73, 1, 1), 
-                               (78, 1, 1), (78, 1, 1), (69, 1, 1), 
-                               (73, 1, 1), (77, 2, 2), (69, 1, 1), 
-                               (73, 1, 1), (77, 1, 1), (77, 1, 1), 
-                               (69, 1, 1), (73, 1, 1), (77, 1, 1), 
-                               (76, 1, 1), (69, 1, 1), (73, 1, 1), 
-                               (76, 1, 1), (76, 1, 1), (69, 1, 1), 
-                               (73, 1, 1), (75, 2, 2), (69, 1, 1), 
-                               (73, 1, 1), (75, 1, 1), (75, 1, 1), 
-                               (69, 1, 1), (73, 1, 1), (75, 1, 1)],
-                              repetitions=2,
-                              playback_notes=[
-                                (50, 4, 4), (50, 4, 4),
+                              [[(50, 4, 4), (50, 4, 4),
                                 (49, 4, 4), (49, 4, 4),
                                 (54, 4, 4), (54, 4, 4),
-                                (51, 4, 4), (51, 4, 4)],
-                              max_consec_mistakes=5),
+                                (51, 4, 4), (51, 4, 4)]]),
     }
     self.current_mode = 'non solo'
     self.modes_to_process = ['doubler']  # Add 'solo' to auto-detect solo sect.
@@ -59,7 +46,7 @@ class Solipair(song.Song):
     """Process program hits (footpedal)."""
     # If in 'solo' mode, any hit of the pedal will return to bass doubler mode.
     if self.current_mode == 'solo':
-      self.modes['solo'].stop()
+      self.modes['solo'].increment_loop()
     elif program == 0:  # Tap to set tempo.
       self.modes['solo'].set_tempo()
     else:  # Start bass for solo.

@@ -107,17 +107,17 @@ venv.bak/
 _site/
 
 # Media files
-.mp4
-.aiff
-.mlt
-.wav
+*.mp4
+*.aiff
+*.mlt
+*.wav
 
 # Tex files.
 Makefile
-.aux
-.bbl
-.bib
-.blg
-.out
-.tex
-.sty
+*.aux
+*.bbl
+*.bib
+*.blg
+*.out
+*.tex
+*.sty
