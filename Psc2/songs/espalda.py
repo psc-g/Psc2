@@ -49,6 +49,10 @@ class Espalda(song.Song):
           self.modes_to_process = []
           self.current_mode = 'solo'
 
+  def process_note_off(self, pitch, velocity, time):
+    for mode in self.modes_to_process:
+      self.modes[mode].process_note_off(pitch, velocity)
+
   def process_program(self, program):
     """Process program hits (footpedal)."""
     # If in 'intro' mode, when hit set lowest bass note to G#1.

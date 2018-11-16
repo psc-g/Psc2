@@ -29,18 +29,18 @@ class Solipair(song.Song):
                                 (51, 4, 4), (51, 4, 4)]]),
     }
     self.current_mode = 'non solo'
-    self.modes_to_process = ['doubler']  # Add 'solo' to auto-detect solo sect.
-    self.mode_detected = None
+    self.modes_to_process = ['doubler']
 
   def process_note(self, pitch, velocity, time):
     if self.current_mode == 'solo' and not self.modes['solo'].playing:
       self.current_mode = 'non solo'
       self.modes_to_process = ['doubler']
     for mode in self.modes_to_process:
-      if self.modes[mode].process_note(pitch, velocity):
-        if mode == 'solo':
-          self.modes_to_process = []
-          self.current_mode = 'solo'
+      self.modes[mode].process_note(pitch, velocity)
+
+  def process_note_off(self, pitch, velocity, time):
+    for mode in self.modes_to_process:
+      self.modes[mode].process_note_off(pitch, velocity)
 
   def process_program(self, program):
     """Process program hits (footpedal)."""

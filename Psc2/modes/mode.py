@@ -7,13 +7,18 @@ class Mode(object):
   @abc.abstractmethod
   def process_note(self, note, velocity):
     """Receive a new note to process.
-
     Args:
       note: int, pitch to check.
       velocity: int, possibly used for playback.
+    """
+    pass
 
-    Returns:
-      bool indicating whether pattern has been met.
+  @abc.abstractmethod
+  def process_note_off(self, note, velocity):
+    """Receive a new note off to process.
+    Args:
+      note: int, pitch to check.
+      velocity: int, possibly used for playback.
     """
     pass
 

@@ -17,6 +17,7 @@ class Looper(mode.Mode):
                client,
                playback_notes,
                eigths_per_tap=2,
+               eigth_duration = 0.5,
                stop_midi_in=True):
     """Creates a Looper object.
 
@@ -36,10 +37,10 @@ class Looper(mode.Mode):
     self.eigths_per_tap = eigths_per_tap
     self.mistake_count = 0
     self.cumulative_times = 0.
-    self.eigth_duration = 0.5
+    self.eigth_duration = eigth_duration
     self.last_time = 0.
     self.eigths_passed = 1
-    self.avg_velocity = 60.
+    self.avg_velocity = 80.
     self.playing = False
     self.loop_num = 0
     self.stop_midi_in = stop_midi_in
@@ -99,3 +100,11 @@ class Looper(mode.Mode):
       self.client.send(msgoff)
       if next_onset > duration:
         time.sleep((next_onset - duration) * self.eigth_duration)
+
+  def process_note(self, note, velocity):
+    """This Mode doesn't do any incoming note processing."""
+    pass
+
+  def process_note_off(self, note, velocity):
+    """This Mode doesn't do any incoming note processing."""
+    pass

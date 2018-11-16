@@ -12,6 +12,7 @@ import time
 
 from Psc2.songs import espalda
 from Psc2.songs import solipair
+from Psc2.songs import woland
 
 
 # Global variables.
@@ -26,12 +27,13 @@ current_song = 'solipair'
 songs = {
     'solipair': solipair.Solipair(client),
     'espalda': espalda.Espalda(client),
+    'woland': woland.Woland(client),
 }
 local_mode = False  # If true will ask SuperCollider for soundz.
 
 
 def print_status():
-  print('hi there!')
+  print('CURRENT SONG: ' + current_song)
 
 
 def process_note_on(addr, tags, args, source):
@@ -47,6 +49,7 @@ def process_note_on(addr, tags, args, source):
     source: Source of sender.
   """
   global local_mode
+  global current_song
   global songs
   songs[current_song].process_note(args[0], args[1], 0)
   if local_mode:
@@ -73,10 +76,9 @@ def process_note_off(addr, tags, args, source):
     args: Arguments passed in message.
     source: Source of sender.
   """
-  msg = OSC.OSCMessage()
-  msg.setAddress('/stopthru')
-  msg.append(args)
-  client.send(msg)
+  global current_song
+  global songs
+  songs[current_song].process_note_off(args[0], args[1], 0)
 
 
 def cc_event(addr, tags, args, source):
@@ -125,6 +127,7 @@ def change_song(addr, tags, args, source):
       new_song = raw_input('new song: ')
       if new_song in songs.keys():
         current_song = new_song
+        print_status()
         break
       print('invalid song, try again...')
 

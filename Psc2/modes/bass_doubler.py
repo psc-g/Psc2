@@ -62,10 +62,10 @@ class BassDoubler(mode.Mode):
     msg.append(self.bass_note_playing)
     self.client.send(msg)
 
-  def _send_stopnote(self):
+  def process_note_off(self, note, velocity):
     msg = OSC.OSCMessage()
-    msg.setAddress('/stopnote')
-    msg.append(self.bass_note_playing)
+    msg.setAddress('/stopthru')
+    msg.append([note, velocity])
     self.client.send(msg)
     self.bass_note_playing = None
 
@@ -90,7 +90,7 @@ class BassDoubler(mode.Mode):
           self.last_sustain_onset = time.time()
           self.concurrent_notes.append(args)
         return
-      self._send_stopnote()
+      self.process_note_off(self.bass_note_playing, velocity)
     self.concurrent_notes.append([note, velocity])
     self._send_playnote()
     return False

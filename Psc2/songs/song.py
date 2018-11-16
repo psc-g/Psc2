@@ -9,5 +9,9 @@ class Song(object):
     pass
 
   @abc.abstractmethod
+  def process_note_off(self, pitch, velocity, time):
+    pass
+
+  @abc.abstractmethod
   def process_program(self, program):
     pass
