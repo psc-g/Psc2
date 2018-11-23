@@ -16,9 +16,16 @@ class AllBass(song.Song):
     """
     self.avg_velocity = 60
     self.mode = bass_doubler.BassDoubler(client, highest_bass_note=highest_note)
+    self.double_bass = True
 
   def process_note(self, pitch, velocity, time):
-    self.mode.process_note(pitch, velocity)
+    if self.double_bass:
+      self.mode.process_note(pitch, velocity)
 
   def process_note_off(self, pitch, velocity, time):
-    self.mode.process_note_off(pitch, velocity)
+    if self.double_bass:
+      self.mode.process_note_off(pitch, velocity)
+
+  def process_program(self, program):
+    """Turn bass doubling on/off."""
+    self.double_bass = not self.double_bass

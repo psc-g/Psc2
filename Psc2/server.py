@@ -26,7 +26,7 @@ server = OSC.OSCServer(receive_address)  # To receive from SuperCollider.
 client = OSC.OSCClient()  # To send to SuperCollier.
 client.connect(send_address)
 
-current_song = 'solipair'
+current_song = 'ab'
 songs = {
     'ab': allbass.AllBass(client),
     'ci': claudius_irae.ClaudiusIrae(client),
@@ -40,7 +40,7 @@ local_mode = False  # If true will ask SuperCollider for soundz.
 
 
 def print_status():
-  print('CURRENT SONG: ' + current_song)
+  print('CURRENT SONG: ' + type(songs[current_song]).__name__)
 
 
 def process_note_on(addr, tags, args, source):
@@ -134,7 +134,7 @@ def change_song(addr, tags, args, source):
     while True:
       print('choose new song:')
       for song in songs.keys():
-        print('\t{}'.format(song))
+        print('\t{} ({})'.format(song, type(songs[song]).__name__))
       new_song = raw_input('new song: ')
       if new_song in songs.keys():
         current_song = new_song
@@ -147,6 +147,8 @@ def program_event(addr, tags, args, source):
   """Events sent by the Mongoose foot controller."""
   global current_song
   global songs
+  if current_song == 'no':
+    return
   cc_num, _, _, _ = args
   songs[current_song].process_program(cc_num)
 
