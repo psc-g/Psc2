@@ -137,6 +137,10 @@ def change_song(addr, tags, args, source):
         print('\t{} ({})'.format(song, type(songs[song]).__name__))
       new_song = raw_input('new song: ')
       if new_song in songs.keys():
+        msg = OSC.OSCMessage()
+        msg.setAddress('/reset')
+        msg.append(args)
+        client.send(msg)
         current_song = new_song
         print_status()
         break

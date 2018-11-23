@@ -33,7 +33,8 @@ class Looper(mode.Mode):
     self.client = client
     self.repetitions_passed = 0
     self.playback_notes = playback_notes
-    self.curr_pos = 0
+    self.last_tap_onset = None
+    self.start_averaging = False
     self.eigths_per_tap = eigths_per_tap
     self.mistake_count = 0
     self.cumulative_times = 0.
@@ -54,13 +55,13 @@ class Looper(mode.Mode):
           self.terminate_loop = False
           if self.stop_midi_in:
             msg = OSC.OSCMessage()
-            msg.setAddress('/togglethru')
+            msg.setAddress('/enablethru')
             self.client.send(msg)
           break
         self.play()
     if self.stop_midi_in:
       msg = OSC.OSCMessage()
-      msg.setAddress('/togglethru')
+      msg.setAddress('/disablethru')
       self.client.send(msg)
     self.playing = True
     play_thread = threading.Thread(target = play_loop)
@@ -68,17 +69,18 @@ class Looper(mode.Mode):
 
   def set_tempo(self):
     """Set the tempo by tapping."""
+    if self.last_tap_onset is None:
+      self.last_tap_onset = time.time()
+      return
     curr_time = time.time()
-    if self.curr_pos == 0:
-      self.cumulative_times = 0.
+    time_delta = curr_time - self.last_tap_onset
+    self.last_tap_onset = curr_time
+    if self.start_averaging:
+      self.eigth_duration += time_delta / self.eigths_per_tap
+      self.eigth_duration /= 2
     else:
-      self.cumulative_times += (
-          (curr_time - self.last_time) / self.eigths_per_tap)
-    self.last_time = curr_time
-    self.curr_pos += 1
-    # We require at least 4 taps before we're confident of tempo.
-    if self.curr_pos > 4:
-      self.eigth_duration = self.cumulative_times / self.curr_pos
+      self.start_averaging = True
+      self.eigth_duration = time_delta / self.eigths_per_tap
 
   def increment_loop(self):
     self.loop_num += 1

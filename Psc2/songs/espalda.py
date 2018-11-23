@@ -1,5 +1,7 @@
 """Espalda song logic."""
 
+import OSC
+
 from Psc2.songs import song
 from Psc2.modes import bass_doubler
 from Psc2.modes import looper
@@ -18,21 +20,22 @@ class Espalda(song.Song):
     Args:
       client: OSCClient, used to send messages for playback.
     """
+    self.client = client
     self.eighth_note_duration = 0.5
     self.avg_velocity = 60
     self.modes = {
         'doubler': bass_doubler.BassDoubler(client, highest_bass_note=54),
         'solo': looper.Looper(client,
-                              [[(46, 3, 3), (58, 2, 2), (58, 2, 2), (58, 1, 1),
-                                (46, 2, 2), (46, 2, 2), (58, 2, 2), (46, 2, 2)],
-                               [(46, 3, 3), (58, 2, 2), (58, 2, 2), (58, 1, 1),
-                                (46, 2, 2), (46, 2, 2), (58, 2, 2), (46, 2, 2),
-                                (44, 3, 3), (56, 2, 2), (56, 2, 2), (56, 1, 1),
-                                (44, 2, 2), (44, 2, 2), (56, 2, 2), (44, 2, 2),
-                                (42, 3, 3), (54, 2, 2), (54, 2, 2), (54, 1, 1),
-                                (42, 2, 2), (42, 2, 2), (54, 2, 2), (42, 2, 2),
-                                (41, 3, 3), (53, 2, 2), (53, 2, 2), (53, 1, 1),
-                                (39, 4, 4), (36, 4, 4)]],
+                              [[(34, 3, 3), (46, 2, 2), (46, 2, 2), (46, 1, 1),
+                                (34, 2, 2), (34, 2, 2), (46, 2, 2), (34, 2, 2)],
+                               [(34, 3, 3), (46, 2, 2), (46, 2, 2), (46, 1, 1),
+                                (34, 2, 2), (34, 2, 2), (46, 2, 2), (34, 2, 2),
+                                (32, 3, 3), (44, 2, 2), (44, 2, 2), (44, 1, 1),
+                                (32, 2, 2), (32, 2, 2), (44, 2, 2), (32, 2, 2),
+                                (30, 3, 3), (42, 2, 2), (42, 2, 2), (42, 1, 1),
+                                (30, 2, 2), (30, 2, 2), (42, 2, 2), (30, 2, 2),
+                                (29, 3, 3), (41, 2, 2), (41, 2, 2), (41, 1, 1),
+                                (27, 4, 4), (24, 4, 4)]],
                               eigths_per_tap=4)
     }
     self.current_mode = 'intro'
@@ -73,6 +76,9 @@ class Espalda(song.Song):
     elif program == 0:  # Tap to set tempo.
       self.modes['solo'].set_tempo()
     else:  # Start bass for solo.
+      msg = OSC.OSCMessage()
+      msg.setAddress('/allnotesoff')
+      self.client.send(msg)
       self.modes_to_process = []
       self.current_mode = 'solo'
       self.modes['solo'].start_looper_thread()

@@ -1,5 +1,7 @@
 """ClaudiusIrae song logic."""
 
+import OSC
+
 from Psc2.songs import song
 from Psc2.modes import bass_doubler
 from Psc2.modes import looper
@@ -18,15 +20,16 @@ class ClaudiusIrae(song.Song):
     Args:
       client: OSCClient, used to send messages for playback.
     """
+    self.client = client
     self.eighth_note_duration = 0.5
     self.avg_velocity = 60
     self.modes = {
         'doubler': bass_doubler.BassDoubler(client, highest_bass_note=54),
         'solo': looper.Looper(client,
-                              [[(45, 3, 3), (52, 3, 3), (50, 5, 5), (57, 3, 3),
-                                (52, 5, 5), (59, 3, 3), (61, 5, 5), (57, 5, 5),
-                                (50, 3, 3), (57, 3, 3), (53, 5, 5), (57, 3, 3),
-                                (56, 5, 5), (52, 3, 3), (49, 5, 5), (52, 5, 5)
+                              [[(45, 5, 5), (52, 3, 3), (50, 5, 5), (57, 3, 3),
+                                (52, 5, 5), (59, 3, 3), (61, 5, 5), (57, 3, 3),
+                                (50, 5, 5), (57, 3, 3), (53, 5, 5), (57, 3, 3),
+                                (56, 5, 5), (52, 3, 3), (49, 5, 5), (52, 3, 3)
                               ]],
                               eigths_per_tap=4)
     }
@@ -52,6 +55,9 @@ class ClaudiusIrae(song.Song):
     elif program == 0:  # Tap to set tempo.
       self.modes['solo'].set_tempo()
     else:  # Start bass for solo.
+      msg = OSC.OSCMessage()
+      msg.setAddress('/allnotesoff')
+      self.client.send(msg)
       self.modes_to_process = []
       self.current_mode = 'solo'
       self.modes['solo'].start_looper_thread()

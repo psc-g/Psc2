@@ -54,6 +54,7 @@ class BassDoubler(mode.Mode):
     if not self.concurrent_notes:
       return
     self.bass_note_playing = min(self.concurrent_notes)
+    self.bass_note_playing[1] = 120
     self.last_bass_hit = time.time()
     self.concurrent_notes = []
     self.bass_key_pressed = True

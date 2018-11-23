@@ -81,6 +81,11 @@ SynthDef(\wurly, {
     Out.ar(out, snd);
 }).add;
 
+~reset = OSCFunc( { | msg, time, addr, port |
+	~sendMidiIn = 1;
+	m.allNotesOff(16);
+}, '/reset' );
+
 ~thru = OSCFunc( { | msg, time, addr, port |
 	m.noteOn(16, msg[1], msg[2]);
 }, '/playthru' );
@@ -89,9 +94,17 @@ SynthDef(\wurly, {
 	m.noteOff(16, msg[1], msg[2]);
 }, '/stopthru' );
 
-~togglethru = OSCFunc( { | msg, time, addr, port |
-	~sendMidiIn = 1 - ~sendMidiIn;
-}, '/togglethru' );
+~allnotesoff = OSCFunc( { | msg, time, addr, port |
+	m.allNotesOff(16);
+}, '/allnotesoff' );
+
+~enablethru = OSCFunc( { | msg, time, addr, port |
+	~sendMidiIn = 1;
+}, '/enablethru' );
+
+~disablethru = OSCFunc( { | msg, time, addr, port |
+	~sendMidiIn = 0;
+}, '/disablethru' );
 
 ~bass = OSCFunc( { | msg, time, addr, port |
 	~bassnotes[msg[1]] = Synth(\bass, [\freq, msg[1].midicps, \amp, msg[2] * 0.00315]);
@@ -162,3 +175,4 @@ m.latency = 0;
 m.connect(2);
 )
 m.noteOff(16, 42, 60);
+m.allNotesOff(16);

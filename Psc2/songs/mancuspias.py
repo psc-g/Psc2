@@ -1,5 +1,7 @@
 """Mancuspias song logic."""
 
+import OSC
+
 from Psc2.songs import song
 from Psc2.modes import bass_doubler
 from Psc2.modes import looper
@@ -19,6 +21,7 @@ class Mancuspias(song.Song):
     Args:
       client: OSCClient, used to send messages for playback.
     """
+    self.client = client
     self.eighth_note_duration = 0.5
     self.avg_velocity = 60
     self.modes = {
@@ -110,6 +113,9 @@ class Mancuspias(song.Song):
     elif program == 0:  # Tap to set tempo.
       self.modes['looper'].set_tempo()
     else:  # Start bass for solo.
+      msg = OSC.OSCMessage()
+      msg.setAddress('/allnotesoff')
+      self.client.send(msg)
       self.modes_to_process = []
       self.current_mode = 'looper'
       self.modes['looper'].start_looper_thread()
