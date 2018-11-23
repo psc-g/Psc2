@@ -10,7 +10,10 @@ import OSC
 import threading
 import time
 
+from Psc2.songs import allbass
+from Psc2.songs import claudius_irae
 from Psc2.songs import espalda
+from Psc2.songs import mancuspias
 from Psc2.songs import solipair
 from Psc2.songs import woland
 
@@ -25,9 +28,13 @@ client.connect(send_address)
 
 current_song = 'solipair'
 songs = {
-    'solipair': solipair.Solipair(client),
-    'espalda': espalda.Espalda(client),
-    'woland': woland.Woland(client),
+    'ab': allbass.AllBass(client),
+    'ci': claudius_irae.ClaudiusIrae(client),
+    'es': espalda.Espalda(client),
+    'ma': mancuspias.Mancuspias(client),
+    'no': None,
+    'so': solipair.Solipair(client),
+    'wo': woland.Woland(client),
 }
 local_mode = False  # If true will ask SuperCollider for soundz.
 
@@ -51,6 +58,8 @@ def process_note_on(addr, tags, args, source):
   global local_mode
   global current_song
   global songs
+  if current_song == 'no':
+    return
   songs[current_song].process_note(args[0], args[1], 0)
   if local_mode:
     msg = OSC.OSCMessage()
@@ -78,6 +87,8 @@ def process_note_off(addr, tags, args, source):
   """
   global current_song
   global songs
+  if current_song == 'no':
+    return
   songs[current_song].process_note_off(args[0], args[1], 0)
 
 

@@ -161,4 +161,4 @@ m = MIDIOut(2);
 m.latency = 0;
 m.connect(2);
 )
-m.noteOff(16, 54, 60);
+m.noteOff(16, 42, 60);
