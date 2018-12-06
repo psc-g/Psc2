@@ -45,7 +45,7 @@ improv_mode = '2sounds'  # Either '2sounds', '1sound', 'question'.
 improv_status = 'psc'  # One of 'psc' or 'robot'.
 
 # Read in the PerformanceRNN model.
-MODEL_PATH = '/home/psc/pyosc/psc2/magenta_models/attention_rnn.mag'
+MODEL_PATH = '~/Psc2/magenta_models/attention_rnn.mag'
 bundle = magenta.music.read_bundle_file(MODEL_PATH)
 
 
