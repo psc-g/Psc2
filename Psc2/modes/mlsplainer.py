@@ -25,7 +25,7 @@ class MLSplainer(mode.Mode):
 
   def __init__(self,
                client,
-               base_models_path='~/Psc2/magenta_models',
+               base_models_path='/home/psc/Psc2/magenta_models',
                model_name='attention_rnn.mag',
                min_primer_length=20,
                max_robot_length=20,

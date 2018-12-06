@@ -29,6 +29,10 @@ psc is a señor swesearcher in google brain, and is experimenting with using mac
 
 4.  Clone this repo.
 
+6.  Download Melody RNN `attention_rnn` model
+    [here](https://github.com/tensorflow/magenta/blob/2c3ae9b0dd64b06295e48e2ee5654e3d207035fc/magenta/models/melody_rnn/README.md),
+    and update the `base_models_path` parameter in `Psc2/modes/mlsplainer.py`.
+
 5.  Open SuperCollider, open `Psc2/server.sc` and run the main group (enclosed
     in parentheses).
 
