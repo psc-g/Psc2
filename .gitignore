@@ -1,3 +1,5 @@
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -110,7 +112,6 @@ _site/
 *.mp4
 *.aiff
 *.mlt
-*.wav
 
 # Tex files.
 Makefile

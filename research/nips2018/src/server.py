@@ -78,7 +78,7 @@ improv_status = 'psc'  # One of 'psc' or 'robot'.
 playable_instruments = set(['click', 'bass', 'drums', 'chords', 'stop'])
 
 # Read in the PerformanceRNN model.
-BASE_MODELS_PATH = '/home/psc/pyosc/psc2/magenta_models'
+BASE_MODELS_PATH = '/Users/korymath/Documents/magenta-demos/ai-jam-js'
 MELODY_MODEL_PATH = BASE_MODELS_PATH + '/attention_rnn.mag'
 DRUMS_MODEL_PATH = BASE_MODELS_PATH + '/drum_kit_rnn.mag'
 melody_bundle = magenta.music.read_bundle_file(MELODY_MODEL_PATH)
