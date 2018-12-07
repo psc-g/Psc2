@@ -7,7 +7,6 @@ from __future__ import division
 from __future__ import print_function
 
 from absl import app
-from absl import flags
 
 import argparse
 
@@ -82,7 +81,7 @@ improv_status = 'psc'  # One of 'psc' or 'robot'.
 playable_instruments = set(['click', 'bass', 'drums', 'chords', 'stop'])
 
 # Read in the PerformanceRNN model.
-BASE_MODELS_PATH = sys.argv[1] 
+BASE_MODELS_PATH = sys.argv[1]
 MELODY_MODEL_PATH = BASE_MODELS_PATH + '/attention_rnn.mag'
 DRUMS_MODEL_PATH = BASE_MODELS_PATH + '/drum_kit_rnn.mag'
 melody_bundle = magenta.music.read_bundle_file(MELODY_MODEL_PATH)
