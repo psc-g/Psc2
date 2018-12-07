@@ -18,6 +18,7 @@ psc is a señor swesearcher in google brain, and is experimenting with using mac
     ```
     virtualenv --system-site-packages -p python2 venv
     source venv/bin/activate
+    pip install -r requirements.txt
     ```
 
 3.  `pip install pyosc`.
