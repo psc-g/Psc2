@@ -8,6 +8,7 @@ from __future__ import print_function
 
 from absl import app
 
+import sys
 import collections
 import importlib
 import os
@@ -78,7 +79,7 @@ improv_status = 'psc'  # One of 'psc' or 'robot'.
 playable_instruments = set(['click', 'bass', 'drums', 'chords', 'stop'])
 
 # Read in the PerformanceRNN model.
-BASE_MODELS_PATH = '/Users/korymath/Documents/magenta-demos/ai-jam-js'
+BASE_MODELS_PATH = sys.argv[1]
 MELODY_MODEL_PATH = BASE_MODELS_PATH + '/attention_rnn.mag'
 DRUMS_MODEL_PATH = BASE_MODELS_PATH + '/drum_kit_rnn.mag'
 melody_bundle = magenta.music.read_bundle_file(MELODY_MODEL_PATH)
@@ -660,16 +661,21 @@ def main(_):
   os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
   set_click()
   print('please press any button on the nanokontrol2')
-  
+
   # Set up and start the server.
   st = threading.Thread(target = server.serve_forever)
+  st.daemon = True
   st.start()
   server.addMsgHandler('/processnoteon', process_note_on)
   server.addMsgHandler('/processnoteoff', process_note_off)
   server.addMsgHandler('/ccevent', cc_event)
   # Start the looper.
   lt = threading.Thread(target = looper)
+  lt.daemon = True
   lt.start()
+
+  while True:
+    time.sleep(1)
 
 
 if __name__ == '__main__':
