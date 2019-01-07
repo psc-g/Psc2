@@ -58,7 +58,7 @@ pyparsing==2.3.0
 python-dateutil==2.7.5
 python-rtmidi==1.1.2
 pytz==2018.5
-PyYAML==3.13
+PyYAML>=4.2b1
 resampy==0.2.1
 scandir==1.9.0
 scikit-learn==0.20.1
