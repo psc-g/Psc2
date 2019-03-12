@@ -1,5 +1,6 @@
 """A MLSplainer mode for hijacking human notes with machine learning ones."""
 
+import os
 import OSC
 import tensorflow as tf
 import threading
@@ -11,6 +12,7 @@ from magenta.models.melody_rnn import melody_rnn_sequence_generator
 from magenta.music import sequences_lib
 from magenta.protobuf import generator_pb2
 from magenta.protobuf import music_pb2
+from Psc2 import ascii_arts
 
 
 from Psc2.modes import mode
@@ -29,7 +31,8 @@ class MLSplainer(mode.Mode):
                model_name='attention_rnn.mag',
                min_primer_length=20,
                max_robot_length=20,
-               temperature=1.0):
+               temperature=1.0,
+               print_ascii_arts=False):
     tf.logging.set_verbosity(tf.logging.ERROR)
     self.client = client
     self.min_primer_length = min_primer_length
@@ -42,6 +45,9 @@ class MLSplainer(mode.Mode):
     melody_model_path = '{}/{}'.format(base_models_path, model_name)
     self.melody_bundle = magenta.music.read_bundle_file(melody_model_path)
     self.temperature = temperature
+    self.print_ascii_arts = print_ascii_arts
+    os.system('clear')
+    print(ascii_arts.arts['psc'])
 
   def reset(self):
     self.accumulated_primer_melody = []
@@ -111,6 +117,8 @@ class MLSplainer(mode.Mode):
     if len(self.generated_melody):
       if self.improv_status != 'robot':
         self.improv_status = 'robot'
+        os.system('clear')
+        print(ascii_arts.arts[self.improv_status])
       # To avoid stuck notes, send a note off for previous mapped note.
       prev_note = self.note_mapping[note]
       self.process_note_off(prev_note, velocity)
@@ -120,6 +128,8 @@ class MLSplainer(mode.Mode):
     else:
       if self.improv_status != 'human':
         self.improv_status = 'human'
+        os.system('clear')
+        print(ascii_arts.arts['psc'])
       self.accumulated_primer_melody.append(note)
     self._send_playnote(note, velocity)
     if len(self.accumulated_primer_melody) >= self.min_primer_length:

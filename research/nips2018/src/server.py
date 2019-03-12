@@ -363,9 +363,9 @@ def process_note_on(addr, tags, args, source):
       curr_time_step = sequences_lib.quantize_to_step(
           curr_time - last_first_beat, steps_per_second)
       playable_notes.add(PlayableNote(type='bass',
-                               note=note,
-                               instrument='bass',
-                               onset=curr_time_step))
+                                      note=note,
+                                      instrument='bass',
+                                      onset=curr_time_step))
       bass_line.append(PlayableNote(type='drums',
                                     note=note,
                                     instrument='bass',

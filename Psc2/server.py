@@ -14,6 +14,7 @@ from Psc2.songs import allbass
 from Psc2.songs import claudius_irae
 from Psc2.songs import espalda
 from Psc2.songs import mancuspias
+from Psc2.songs import mlsplainer
 from Psc2.songs import solipair
 from Psc2.songs import woland
 
@@ -26,12 +27,13 @@ server = OSC.OSCServer(receive_address)  # To receive from SuperCollider.
 client = OSC.OSCClient()  # To send to SuperCollier.
 client.connect(send_address)
 
-current_song = 'ab'
+current_song = 'ms'
 songs = {
     'ab': allbass.AllBass(client),
     'ci': claudius_irae.ClaudiusIrae(client),
     'es': espalda.Espalda(client),
     'ma': mancuspias.Mancuspias(client),
+    'ms': mlsplainer.MLSplainer(client),
     'no': None,
     'so': solipair.Solipair(client),
     'wo': woland.Woland(client),
@@ -160,15 +162,19 @@ def program_event(addr, tags, args, source):
 def main(_):
   os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Turn off TF logging.
   print_status()
-  
+
   # Set up and start the server.
   st = threading.Thread(target = server.serve_forever)
+  st.daemon = True
   st.start()
   server.addMsgHandler('/processnoteon', process_note_on)
   server.addMsgHandler('/processnoteoff', process_note_off)
   server.addMsgHandler('/ccevent', cc_event)
   server.addMsgHandler('/programevent', program_event)
   server.addMsgHandler('/changesong', change_song)
+
+  while True:
+    time.sleep(1)
 
 
 if __name__ == '__main__':

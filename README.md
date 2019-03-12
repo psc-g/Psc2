@@ -11,39 +11,45 @@ psc is a señor swesearcher in google brain, and is experimenting with using mac
 ## Installation
 1.  Install [SuperCollider](https://supercollider.github.io/)
 
-2.  Create a virtualenv and activate it. We need Python2 (and _not_ Python3)
+1.  Clone this repo.
+
+1.  Create a virtualenv and activate it. We need Python2 (and _not_ Python3)
     because `pyosc` is not compatible with Python3. This step is optional but
     recommended:
 
     ```
     virtualenv --system-site-packages -p python2 venv
     source venv/bin/activate
+    cd Psc2
     pip install -r requirements.txt
     ```
+    If the last command does not work, then:
 
-3.  `pip install pyosc`.
+    1.  `pip install pyosc`.
 
-4.  Install Tensorflow (instructions
-    [here](https://www.tensorflow.org/install/)).
+    1.  `pip install tensorflow`
+        Full instructions [here](https://www.tensorflow.org/install/).
 
-5.  Install Magenta (instructions [here](https://github.com/tensorflow/magenta)).
+    1.  `pip install magenta`
+         Full instructions [here](https://github.com/tensorflow/magenta).
 
-4.  Clone this repo.
-
-6.  Download Melody RNN `attention_rnn` model
+1.  Download Melody RNN `attention_rnn` model
     [here](https://github.com/tensorflow/magenta/blob/2c3ae9b0dd64b06295e48e2ee5654e3d207035fc/magenta/models/melody_rnn/README.md),
     and update the `base_models_path` parameter in `Psc2/modes/mlsplainer.py`.
 
-5.  Open SuperCollider, open `Psc2/server.sc` and run the main group (enclosed
+1.  Download DrumKit RNN model (for NeurIPS demo)
+    [here](https://github.com/tensorflow/magenta/tree/2c3ae9b0dd64b06295e48e2ee5654e3d207035fc/magenta/models/drums_rnn).
+
+1.  Open SuperCollider, open `Psc2/server.sc` and run the main group (enclosed
     in parentheses).
 
-6.  From the root directory, run:
+1.  From the root directory, run:
 
     ```
     python setup.py install
     ```
 
-7.  Start the python server:
+1.  Start the python server:
 
     ```
     python Psc2/server.py
