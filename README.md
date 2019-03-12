@@ -25,6 +25,9 @@ psc is a señor swesearcher in google brain, and is experimenting with using mac
     ```
     If the last command does not work, then:
 
+    1.  `pip install absl-py`
+
+
     1.  `pip install pyosc`.
 
     1.  `pip install tensorflow`
