@@ -8,6 +8,8 @@ the arrangements take well-known songs from pop, rock and jazz and re-build them
 
 psc is a señor swesearcher in google brain, and is experimenting with using machine learning models (including generative models for music) as part of the live performance. most of the code used will be available in this repo.
 
+the white paper explaining the solo setting is available [here](https://arxiv.org/abs/1904.13285).
+
 ## Installation
 1.  Install [SuperCollider](https://supercollider.github.io/)
 

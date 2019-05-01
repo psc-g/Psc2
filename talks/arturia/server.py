@@ -504,8 +504,8 @@ def cc_event(addr, tags, args, source):
       beat_length += time_delta
       beat_length /= 2
     qpm = 60.0 / beat_length
-  elif channel_name == 'knob2':
-    qpm = 300 * cc_num / float(highest_value)
+  # elif channel_name == 'knob2':
+  #   qpm = 300 * cc_num / float(highest_value)
   # TODO(map to something else)
   elif channel_name == 'track_left' and cc_num == highest_value:
     time_signature.numerator = max(2, time_signature.numerator - 1)
@@ -527,9 +527,9 @@ def cc_event(addr, tags, args, source):
     set_click()
   # end TODO
   # Logic for controlling the bass.
-  elif channel_name == 'knob3':
-    bass_volume = 5.0 * cc_num / float(highest_value)
-    print_status()
+  # elif channel_name == 'knob3':
+  #   bass_volume = 5.0 * cc_num / float(highest_value)
+  #   print_status()
   elif channel_name == 'pad10' and cc_num == highest_value:
     mode = 'bass'
     last_first_beat_for_record = None
