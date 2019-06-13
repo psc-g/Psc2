@@ -1,14 +1,14 @@
 # Psc2
 
-Psc2 combines the worlds of jazz, rock, classical music, and artificial intelligence via original compositions and arrangements.
-
-the compositions are built around the interplay of jazz harmonies, complex rhythms and extensive improvisation; many of them are composed in the "long-form" compositional style of classical music.
-
-the arrangements take well-known songs from pop, rock and jazz and re-build them in a manner similar to our original compositions. the arrangements include songs by michael jackson, guns n' roses, silvio rodriguez, duke ellington and others.
-
 psc is a señor swesearcher in google brain, and is experimenting with using machine learning models (including generative models for music) as part of the live performance. most of the code used will be available in this repo.
 
+if you want to see the code i use for my talks, you can see it [here](https://github.com/psc-g/Psc2/tree/master/talks/arturia).
+
+*NEW:* i built a web app to make it easier for you to try out this idea! check it out [here](https://ml-jam.glitch.me/).
+
 the white paper explaining the solo setting is available [here](https://arxiv.org/abs/1904.13285).
+
+if you want the full-blown system, continue reading.
 
 ## Installation
 1.  Install [SuperCollider](https://supercollider.github.io/)
