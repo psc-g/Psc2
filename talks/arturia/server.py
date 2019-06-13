@@ -62,7 +62,7 @@ last_first_beat = 0.0  # Last time we passed the first beat during playback.
 # Last first beat from the moment the bass started playing.
 last_first_beat_for_record = None
 bass_line = []
-bass_volume = 1.0
+bass_volume = 5.0
 chords_volume = 1.0
 improv_volume = 1.0
 MAX_TAP_DELAY = 5.0
@@ -76,6 +76,7 @@ note_mapping = {i:i for i in range(21, 109)}
 mode = 'free'  # Mode of operation: {'free', 'bass', 'chords', 'improv'}.
 improv_status = 'psc'  # One of 'psc' or 'robot'.
 playable_instruments = set(['click', 'bass', 'drums', 'chords', 'stop'])
+gracias_splash = False
 
 # Read in the PerformanceRNN model.
 BASE_MODELS_PATH = sys.argv[1]
@@ -475,6 +476,7 @@ def cc_event(addr, tags, args, source):
   global chords_volume
   global improv_volume
   global play_loop
+  global gracias_splash
   if not args:
     return
   cc_num, cc_chan, cc_src, cc_args = args
@@ -527,9 +529,9 @@ def cc_event(addr, tags, args, source):
     set_click()
   # end TODO
   # Logic for controlling the bass.
-  # elif channel_name == 'knob3':
-  #   bass_volume = 5.0 * cc_num / float(highest_value)
-  #   print_status()
+  elif channel_name == 'knob3':
+    bass_volume = 5.0 * cc_num / float(highest_value)
+    print_status()
   elif channel_name == 'pad10' and cc_num == highest_value:
     mode = 'bass'
     last_first_beat_for_record = None
@@ -600,10 +602,12 @@ def cc_event(addr, tags, args, source):
   elif channel_name == 'knob6':
     improv_volume = 5.0 * cc_num / float(highest_value)
     print_status()
-  elif channel_name == 'pad16' and cc_num == highest_value:
+  elif channel_name == 'pad15' and cc_num == highest_value:
     mode = 'free'
   elif channel_name == 'pad14' and cc_num == highest_value:
     mode = 'improv'
+  elif channel_name == 'pad16' and cc_num == highest_value:
+    gracias_splash = True
   print_status()
 
 
@@ -622,7 +626,11 @@ def print_status():
   global bass_volume
   global chords_volume
   global improv_volume
+  global gracias_splash
   os.system('clear')
+  if gracias_splash:
+    print(ascii_arts.arts['gracias'])
+    return
   print('mode: {}'.format(mode))
   print('num_bars: {}'.format(num_bars))
   print('{} / {} : {}'.format(time_signature.numerator,
