@@ -1,4 +1,4 @@
-"""Setup for NIPS 2018 Creativity Workshop.
+"""Setup for Psc2 demo with Arturia keyboard.
 This is a server that communicates with SuperCollider for interacting with a
 MIDI controller.
 """
@@ -42,8 +42,8 @@ client = OSC.OSCClient()  # To send to SuperCollier.
 client.connect(send_address)
 
 class TimeSignature:
-  numerator = 7
-  denominator = 8
+  numerator = 4
+  denominator = 4
 
 time_signature = TimeSignature()
 qpm = magenta.music.DEFAULT_QUARTERS_PER_MINUTE
@@ -113,6 +113,90 @@ DRUM_MAPPING = {
     # ride cymbal
     51: 'ride', 52: 'ride', 53: 'ride', 59: 'ride', 82: 'ride'
 }
+drum_type = 'STRAIGHT FROM THE BASSLINE'
+
+
+# Variables for drawing keyboard.
+MIN_MIDI = 48
+MAX_MIDI = 72
+WHITE_CHAR = ' '
+BLACK_CHAR = '-'
+PLAYING_CHAR = 'H'
+SEPARATOR_CHAR = '|'
+BOTTOM_CHAR = '_'
+# Key dimensions.
+WHITE_WIDTH = 5
+WHITE_HEIGHT = 6
+BLACK_WIDTH = 3
+BLACK_HEIGHT = 4
+TOP_SIDE_WHITE_WIDTH = WHITE_WIDTH - (BLACK_WIDTH - 1) // 2
+TOP_MID_WHITE_WIDTH = WHITE_WIDTH - (BLACK_WIDTH - 1)
+# This specifies the configuration of keys in an octave. We assume the
+# keyboard starts at C.
+KEY_LAYOUTS = [
+    'lw',  # C
+    'b',   # C#
+    'mw',  # D
+    'b',   # D#
+    'rw',  # E
+    'lw',  # F
+    'b',   # F#
+    'mw',  # G
+    'b',   # G#
+    'mw',  # A
+    'b',   # A#
+    'rw'  # B
+]
+NoteSpec = collections.namedtuple('note_spec', ['midi', 'layout'])
+# This dictionary maps MIDI notes to their status (on/off).
+midi_key_status = {}
+# This array must correspond to the keys on the actual keyboard, and is what
+# will be used to draw the keyboard on-screen.
+midi_keys = []
+
+
+def setup_keyboard():
+  i = 0
+  for key in range(MIN_MIDI, MAX_MIDI + 1):
+    midi_key_status[key] = False
+    midi_keys.append(NoteSpec(key, KEY_LAYOUTS[i % len(KEY_LAYOUTS)]))
+    i += 1
+
+
+def draw_keyboard():
+  """Draws the keyboard on-screen."""
+  global generated_melody
+  global midi_keys
+  ai_chars = ['A', 'I']
+  for h in range(WHITE_HEIGHT):
+    play_char = ai_chars[h % 2] if len(generated_melody) else PLAYING_CHAR
+    line = ''
+    for key in midi_keys:
+      if key.layout == 'b':
+        if h < BLACK_HEIGHT:
+          char_to_print = (
+              play_char if midi_key_status[key.midi] else BLACK_CHAR)
+          line += char_to_print * BLACK_WIDTH
+        continue
+      char_to_print = play_char if midi_key_status[key.midi] else WHITE_CHAR
+      if h < BLACK_HEIGHT:
+        if key.layout == 'lw':
+          line += SEPARATOR_CHAR
+        if key.layout == 'lw' or key.layout == 'rw':
+          line += char_to_print * TOP_SIDE_WHITE_WIDTH
+        else:
+          line += char_to_print * TOP_MID_WHITE_WIDTH
+      else:
+        line += SEPARATOR_CHAR + char_to_print * WHITE_WIDTH
+    line += SEPARATOR_CHAR
+    print(line)
+  line = ''
+  for key in midi_keys:
+    if key.layout == 'b':
+      continue
+    line += '{}{}'.format(SEPARATOR_CHAR, BOTTOM_CHAR * WHITE_WIDTH)
+  line += SEPARATOR_CHAR
+  print(line)
 
 
 def set_click():
@@ -182,9 +266,7 @@ def looper():
       msg = OSC.OSCMessage()
       msg.setAddress(prefix + playable_note.instrument)
       note = list(playable_note.note)
-      if playable_note.type == 'bass':
-        note[1] *= bass_volume
-      elif playable_note.type == 'chords':
+      if playable_note.type == 'chords':
         note[1] *= chords_volume
       msg.append(note)
       client.send(msg)
@@ -236,6 +318,7 @@ def generate_melody():
 
 def generate_drums():
   """Generate a new drum groove by querying the model."""
+  global drum_type
   global drums_bundle
   global generated_drums
   global playable_notes
@@ -297,6 +380,8 @@ def generate_drums():
                                     note=[],
                                     instrument=DRUM_MAPPING[p],
                                     onset=s))
+  drum_type = 'AI DRUMS!'
+  print_status()
 
 
 def send_playnote(note=None, sound='wurly'):
@@ -310,6 +395,8 @@ def send_playnote(note=None, sound='wurly'):
   msg = OSC.OSCMessage()
   command = '/play{}'.format(sound)
   msg.setAddress(command)
+  if sound == 'bass':
+    note[1] *= bass_volume
   msg.append(note)
   client.send(msg)
 
@@ -339,10 +426,12 @@ def process_note_on(addr, tags, args, source):
     source: Source of sender.
   """
   global accumulated_primer_melody
+  global bass_volume
   global generated_melody
   global min_primer_length
   global note_mapping
   global improv_status
+  global midi_keys
   global mode
   global qpm
   global time_signature
@@ -408,7 +497,9 @@ def process_note_on(addr, tags, args, source):
     if len(accumulated_primer_melody) >= min_primer_length:
       magenta_thread = threading.Thread(target = generate_melody)
       magenta_thread.start()
+  midi_key_status[note[0]] = True
   send_playnote(note, sound)
+  print_status()
 
 
 def process_note_off(addr, tags, args, source):
@@ -425,13 +516,16 @@ def process_note_off(addr, tags, args, source):
     source: Source of sender.
   """
   global mode
+  global midi_keys
   global note_mapping
   global last_first_beat_for_record
   global last_first_beat
   global playable_notes
   global qpm
   note = list(args)
+  midi_key_status[args[0]] = False
   if mode == 'bass' or mode == 'chords':
+    print_status()
     return
   orig_note = list(args)
   note = list(args)
@@ -440,7 +534,9 @@ def process_note_off(addr, tags, args, source):
   send_stopnote(note)
   # Just in case we also send a stopnote for original note.
   send_stopnote(orig_note)
+  midi_key_status[note[0]] = False
   note_mapping[args[0]] = args[0]
+  print_status()
 
 
 def cc_event(addr, tags, args, source):
@@ -477,6 +573,7 @@ def cc_event(addr, tags, args, source):
   global improv_volume
   global play_loop
   global gracias_splash
+  global drum_type
   if not args:
     return
   cc_num, cc_chan, cc_src, cc_args = args
@@ -574,6 +671,8 @@ def cc_event(addr, tags, args, source):
                                       note=[],
                                       instrument='snare',
                                       onset=bass_note.onset))
+    drum_type = 'STRAIGHT FROM THE BASSLINE'
+    print_status()
   # TODO: assign to new button.
   elif channel_name == 'track3_mute' and cc_num == highest_value:
     if 'drums' in playable_instruments:
@@ -607,13 +706,32 @@ def cc_event(addr, tags, args, source):
   elif channel_name == 'pad14' and cc_num == highest_value:
     mode = 'improv'
   elif channel_name == 'pad16' and cc_num == highest_value:
-    gracias_splash = True
+    # TODO(psc): Making this clear everything just for demo.
+    #gracias_splash = True
+    playable_notes = SortedList(
+        [x for x in playable_notes if x.type == 'click'],
+        key=lambda x: x.onset)
+    mode = 'free'
+    generated_melody = []
   print_status()
+
+
+def human_readable_temperature(t):
+  if t < 0.05:
+    return 'KINDA BORING'
+  if t < 0.5:
+    return 'NOT TAKING TOO MANY RISKS'
+  if t <= 1.0:
+    return 'SOME RISKS, BUT WITHIN MEASURE'
+  if t < 1.5:
+    return 'GOING A BIT WILD!'
+  return 'YOU ARE WILD!'
 
 
 def print_status():
   """Prints the status of the system."""
   global mode
+  global drum_type
   global improv_status
   global min_primer_length
   global max_robot_length
@@ -627,19 +745,41 @@ def print_status():
   global chords_volume
   global improv_volume
   global gracias_splash
+  global play_loop
+  global playable_instruments
   os.system('clear')
+  print(ascii_arts.arts['ml-jam'])
   if gracias_splash:
     print(ascii_arts.arts['gracias'])
     return
-  print('mode: {}'.format(mode))
-  print('num_bars: {}'.format(num_bars))
-  print('{} / {} : {}'.format(time_signature.numerator,
-                              time_signature.denominator,
-                              qpm))
-  print('temperature: {}'.format(temperature))
-  print('bass_volume: {}'.format(bass_volume))
-  print('chords_volume: {}'.format(chords_volume))
-  print('improv_volume: {}'.format(improv_volume))
+  print('LOOPER: {}'.format('ON' if play_loop else 'OFF'))
+  print()
+  print('CLICK: {}'.format('ON' if 'click' in playable_instruments else 'OFF'))
+  print()
+  print('DRUMS: {}'.format(drum_type))
+  print()
+  print_mode = 'FREE IMPROVISATION'
+  if mode == 'bass':
+    print_mode = 'RECORDING BASSLINE'
+  elif mode == 'chords':
+    print_mode = 'RECORDING CHORDS'
+  elif mode == 'improv':
+    print_mode = 'HUMAN-ML IMPROVISATION'
+  print('CURRENT MODE: {}'.format(print_mode))
+  print()
+  # TODO(psc): Turning this off just for demo
+  #print('num_bars: {}'.format(num_bars))
+  #print('{} / {} : {}'.format(time_signature.numerator,
+  #                            time_signature.denominator,
+  #                            qpm))
+  print('DRUMS RISK-TAKING: {}'.format(human_readable_temperature(temperature)))
+  #print('bass_volume: {}'.format(bass_volume))
+  #print('chords_volume: {}'.format(chords_volume))
+  #print('improv_volume: {}'.format(improv_volume))
+  print()
+  print()
+  print()
+  draw_keyboard()
   if mode != 'improv':
     return
   print(ascii_arts.arts[improv_status])
@@ -654,6 +794,7 @@ def print_status():
 def main(_):
   tf.logging.set_verbosity(tf.logging.ERROR)
   os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+  setup_keyboard()
   set_click()
 
   # Set up and start the server.

@@ -1,5 +1,23 @@
 # -*- coding: utf-8 -*-
 arts = {
+    'ml-jam': """
+MMMMMMMM               MMMMMMMMLLLLLLLLLLL                                        JJJJJJJJJJJ                                        
+M:::::::M             M:::::::ML:::::::::L                                        J:::::::::J                                        
+M::::::::M           M::::::::ML:::::::::L                                        J:::::::::J                                        
+M:::::::::M         M:::::::::MLL:::::::LL                                        JJ:::::::JJ                                        
+M::::::::::M       M::::::::::M  L:::::L                                            J:::::J  aaaaaaaaaaaaa      mmmmmmm    mmmmmmm   
+M:::::::::::M     M:::::::::::M  L:::::L                                            J:::::J  a::::::::::::a   mm:::::::m  m:::::::mm 
+M:::::::M::::M   M::::M:::::::M  L:::::L                                            J:::::J  aaaaaaaaa:::::a m::::::::::mm::::::::::m
+M::::::M M::::M M::::M M::::::M  L:::::L                ---------------             J:::::j           a::::a m::::::::::::::::::::::m
+M::::::M  M::::M::::M  M::::::M  L:::::L                -:::::::::::::-             J:::::J    aaaaaaa:::::a m:::::mmm::::::mmm:::::m
+M::::::M   M:::::::M   M::::::M  L:::::L                --------------- JJJJJJJ     J:::::J  aa::::::::::::a m::::m   m::::m   m::::m
+M::::::M    M:::::M    M::::::M  L:::::L                                J:::::J     J:::::J a::::aaaa::::::a m::::m   m::::m   m::::m
+M::::::M     MMMMM     M::::::M  L:::::L         LLLLLL                 J::::::J   J::::::Ja::::a    a:::::a m::::m   m::::m   m::::m
+M::::::M               M::::::MLL:::::::LLLLLLLLL:::::L                 J:::::::JJJ:::::::Ja::::a    a:::::a m::::m   m::::m   m::::m
+M::::::M               M::::::ML::::::::::::::::::::::L                  JJ:::::::::::::JJ a:::::aaaa::::::a m::::m   m::::m   m::::m
+M::::::M               M::::::ML::::::::::::::::::::::L                    JJ:::::::::JJ    a::::::::::aa:::am::::m   m::::m   m::::m
+MMMMMMMM               MMMMMMMMLLLLLLLLLLLLLLLLLLLLLLLL                      JJJJJJJJJ       aaaaaaaaaa  aaaammmmmm   mmmmmm   mmmmmm
+                                                                                                                                     """,
     'psc': """
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
